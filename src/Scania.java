@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Scania extends Truck{
+public class Scania extends Truck implements TipAble{
     private double tipped;
 
     public Scania(Color color){
