@@ -1,0 +1,46 @@
+Analysera de beroenden som finns med avseende på cohesion och coupling, och Dependency Inversion Principle.
+
+cohesion:
+    Vehicle klasserna gör det bra. Dom beskriver hur en typ av vehicle fungerar, metoderna är specifika för klassen.
+    CarController: gör lite allt möjligt, låg cohesion, gör knapparna och lägger in bilarna "fysiskt", sätter position och in i arraylist osv. Kör main också.
+    DrawPanel: Gör rendering, moveit, laddar bilder. Inte jättebra.
+    CarView: hög gör layout.
+coupling:
+    Hög koppling. Mycket beroenden som gör så att vi inte kan använda klasserna "standalone". De anropar varandra och beror på varandra. Använder t.ex. Vehicle på många ställen.
+DIP:
+    Allt beror på specifika implementationer. dåligt!
+
+Vilka beroenden är nödvändiga?
+Subtypspolymorfism med Vehicle. Movable --> Vehicle abstraktion. Interfaces som säkerställer beteenden.
+Vilka klasser är beroende av varandra som inte borde vara det?
+CarController är cirkulärt beroende till CarView. CarController till Drawpanel, behöver inte känna till varandra.
+Finns det starkare beroenden än nödvändigt?
+Ja.
+Kan ni identifiera några brott mot övriga designprinciper vi pratat om i kursen?
+OCP: hårdkodade värden och typer (t.ex. bestämt att det är en scania, volvoworkshop, x och y värden)
+
+Analysera era klasser med avseende på Separation of Concern (SoC) och Single Responsibility Principle (SRP).
+Vilka ansvarsområden har era klasser?
+CarController gör mycket: domänregler (köra utanför fönster), UI uppdatering, Simulering/loop, håller bilar, skapar koordinater osv.
+Vilka anledningar har de att förändras?
+CarController: om vi byter något av beroenden så måste vi ändra i koden, till exemple byta från Swing, bounds, nya knappar, andra fordon
+På vilka klasser skulle ni behöva tillämpa dekomposition för att bättre följa SoC och SRP?
+CarController: en för simulering, en för regler, main, mfl
+DrawPanel: läsa in bilder sköta grafik, ladda in bilar
+
+
+Varför är det bättre nu?
+Cohesion: tydligare ansvarsområden.
+Coupling: minskade beroenden.
+DIP: bero inte på specifka bilmodeller (använd interface CarActions)
+Framförallt: Cykeln mellan CarController och CarView är bruten genom interfaces.
+Controller är inte kopplad till drawpanel.
+refaktoriseringsplan:
+CarController: ta emot användarinput och uppdatera "fysiken"
+CarView: ansvarar för presentation och användarinteraktion
+DrawPanel: ritar ut
+
+1. Lägg till interfacet CarActions för att bryta cykeln mellan CarView och CarController. CarView ska bara känna till de knappar den ska ha.
+2.  gör så att workshopen kan ta emot vehicles. för att minska beroenden.
+3. CarController ska inte bry sig om vilka specifika bilmodeller den arbetar med Workshop<Vehicle>. Så försvinner Use pilar från CarController till volvo, saab, scania.
+4. Ta bort Vehicle beroende från DrawPanel. Ta bort moveit och inför istället SetPoints som tar emot bildnamnet och points den ska flyttas till. Då beror inte controller eller vehicle på DrawPanel.
