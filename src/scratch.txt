@@ -40,7 +40,10 @@ CarController: ta emot användarinput och uppdatera "fysiken"
 CarView: ansvarar för presentation och användarinteraktion
 DrawPanel: ritar ut
 
-1. Lägg till interfacet CarActions för att bryta cykeln mellan CarView och CarController. CarView ska bara känna till de knappar den ska ha.
+1. Lägg till interfacet CarActions för att bryta cykeln mellan CarView och CarController. CarView ska bara känna till de knappar den ska ha --> döp om till CarButtons så den endast sköter knapparna. Lägg till InterFacet CarPosition så att Controllern kallar på denna för att uppdatera positionerna som ska ritas ut, och därmed inte känner till DrawPanel. Ritaren DrawPanel implementerar detta interface.
+CarButtons till Controller: CarButtons har inte längre CarController carC. Utan CarActions carA. När man trycker på gas så kallar CarButtons på carA.gas(). CarButtons vet inte "vilken" controller som finns, bara att det finns "någon" kontroller.
+Controller till DrawPanel: Controllern har en "positioner" som kallar på positioner.update(namn, point). DrawPanel implementerar interfacet och tar emot points och gör målar ut. CarController funkar med vilken ritare som helst.
+Detta ökar cohesion och minskar coupling där det blir tydligare ansvarsfördelning och mindre direkta beroenden.
 2.  gör så att workshopen kan ta emot vehicles. för att minska beroenden.
 3. CarController ska inte bry sig om vilka specifika bilmodeller den arbetar med Workshop<Vehicle>. Så försvinner Use pilar från CarController till volvo, saab, scania.
 4. Ta bort Vehicle beroende från DrawPanel. Ta bort moveit och inför istället SetPoints som tar emot bildnamnet och points den ska flyttas till. Då beror inte controller eller vehicle på DrawPanel.
